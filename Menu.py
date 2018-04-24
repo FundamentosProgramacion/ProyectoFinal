@@ -128,10 +128,15 @@ def dibujar():
     puntos = 0      # Naves destruidas
     fuente = pygame.font.SysFont("monospace", 76)
 
+    # Timer
+    # Registra un evento, se activa cada 1000 milisegundos (un segundo en este caso)
+    pygame.time.set_timer(pygame.USEREVENT, 1000)
 
     while not termina:  # Ciclo principal
         # Procesa los eventos que recibe el programa
         for evento in pygame.event.get():
+            if evento.type == pygame.USEREVENT:
+                print("Timer")      # Este mensaje se imprime cada segundo, lo puedes ver en la consola
             if evento.type == pygame.QUIT:  # El usuario hizo click en el botón de salir
                 termina = True
             if evento.type == pygame.MOUSEBUTTONDOWN:
