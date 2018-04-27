@@ -92,6 +92,9 @@ def dibujar():
     imgBtnTitulo=pygame.image.load("Titulo.png")
     imgBtnVolver=pygame.image.load("VolverMenu.png")
     imgBtnInst=pygame.image.load("InInstrucc.png")
+#Sonido
+
+
 
 
 #Imagen pantalla ganar
@@ -139,10 +142,10 @@ def dibujar():
     spriteBtnInst.image = imgBtnInst
     spriteBtnInst.rect = imgBtnInst.get_rect()
     spriteBtnInst.rect.left = ANCHO - spriteBtnInst.rect.width-40
-    spriteBtnInst.rect.top = 40 + spriteBtnInst.rect.height
+    spriteBtnInst.rect.top = 20 + spriteBtnInst.rect.height
 
 #TExtos
-    fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 60)
+    fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 18)
 
     # ESTADOS del juego
 
@@ -209,7 +212,11 @@ def dibujar():
                             estadoJuego = MENU
 
             if evento.type == pygame.KEYDOWN and estadoJuego==JUEGO:
-                if evento.key == pygame.K_LEFT:
+
+
+
+
+                if evento.key == pygame.K_LEFT :
                     longitud=-10
                     movercanasta= True
 
@@ -217,7 +224,9 @@ def dibujar():
                 if evento.key == pygame.K_RIGHT:
                     longitud=10
                     movercanasta = True
-            if evento.type==pygame.KEYUP:
+
+
+            if evento.type==pygame.KEYUP :
                 movercanasta= False
 
 
@@ -235,21 +244,33 @@ def dibujar():
             ventana.blit(spriteBtnPuntajes.image, spriteBtnPuntajes.rect)
             ventana.blit(spriteBtnTitulo.image, spriteBtnTitulo.rect)
         elif estadoJuego == JUEGO:
-            if movercanasta:
+
+
+            if movercanasta :
                 canasta.rect.left += longitud
             ventana.blit(canasta.image, canasta.rect)
+            #manzana normales
             dibujarManzanas(ventana, listaManzana)
-
             actualizarManzanas(listaManzana,imgManzana,)
             checarColisiones(listaManzana, canasta)
-
+            #Manzanas envenenadas
             dibujarManzanas(ventana, listaManzanaP)
             actualizarManzanas(listaManzanaP, imgManzanaP)
             checarColisiones(listaManzanaP,canasta)
-        elif estadoJuego==INSTRUCCIONES:
-            ventana.blit(imgPersonajeGanar, (0, -150))
-            ventana.blit(spriteBtnInst.image, spriteBtnInst.rect)
 
+        elif estadoJuego==INSTRUCCIONES:
+            ventana.blit(imgPersonajeGanar, (-20, -150))
+            ventana.blit(spriteBtnInst.image, spriteBtnInst.rect)
+            texto = fuente.render("Atrapa todas las manzanas que puedas ", 1, BLANCO)
+            texto2=fuente.render("durante 120 segundos, si atrapas manzanas",1,BLANCO)
+            texto3=fuente.render("envenenadas no te preocupes, no perderas",1,BLANCO)
+            texto4=fuente.render("automaticamente pero perderas puntos.",1,BLANCO)
+            texto5=fuente.render("¡Buena suerte!",1,BLANCO)
+            ventana.blit(texto, (400, 200))
+            ventana.blit(texto2, (400,260))
+            ventana.blit(texto3, (400, 320))
+            ventana.blit(texto4, (400,380 ))
+            ventana.blit(texto5, (400,440 ))
             ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
 
 
@@ -270,4 +291,5 @@ def main():
     dibujar()
 
 
++
 main()
