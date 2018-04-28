@@ -15,7 +15,7 @@ ROJO = (255, 0, 0)
 AZUL = (0, 0, 255)
 NEGRO = (0, 0, 0)
 
-reloj = pygame.time.Clock()
+clock = pygame.time.Clock()
 
 def creaCreditos(ventana,lista):
     fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 14)
@@ -26,6 +26,15 @@ def creaCreditos(ventana,lista):
         datox=fuente.render(dato,1,BLANCO)
         ventana.blit(datox, (xOrigen, yOrigen))
         yOrigen+=30
+
+
+
+def calcularPuntos(puntos,numero):
+    Puntos=len(puntos)
+    score=Puntos*numero
+    return score
+
+
 
 
 
@@ -48,6 +57,11 @@ def crearManzanas(listaManzana, imgManzana,cantidad):
         contador += 1
 
     return listaManzana
+
+
+def puntosTotal(puntosM,puntosMP):
+    puntos = puntosM - (puntosMP)
+    return puntos
 
 # Dibuja TODOS los enemigos sobre la ventana
 def dibujarManzanas(ventana, listaManzana):
@@ -89,15 +103,17 @@ def regresarCreditos(archivo):
 
 
 # de momento no hace nada , hay que ver como actualziarla con el juego que haras
-def checarColisiones(listaManzana, canasta):
-    atrapadas = 0
+def checarColisiones(listaManzana,canasta,puntos):
+
+
     for iB in range(len(listaManzana)-1, -1, -1):
         apple = listaManzana[iB]
         xb, yb, ab, alb = canasta.rect
         xe, ye, ae, ale = apple.rect
+
         if xe>=xb-ae+5 and xe+ae<=xb+ab+ae-5 and yb>=ye and yb<=ye+ale:
             listaManzana.remove(apple)
-
+            puntos.append(1)
                 # Contarlo
 
                 # efecto de sonido
@@ -228,7 +244,9 @@ def dibujar():
     canasta.rect.left = ANCHO // 2
     canasta.rect.top = ALTO - canasta.rect.height
     movercanasta= False
-
+    #Lista para los puntos
+    puntos=[]
+    puntosP=[]
 
 #PEGA QUI LO QUE quitaste
 
@@ -308,21 +326,28 @@ def dibujar():
             ventana.blit(spriteBtnPuntajes.image, spriteBtnPuntajes.rect)
             ventana.blit(spriteBtnTitulo.image, spriteBtnTitulo.rect)
         elif estadoJuego == JUEGO:
-
-
             if movercanasta :
                 canasta.rect.left += longitud
             ventana.blit(canasta.image, canasta.rect)
             #manzana normales
             dibujarManzanas(ventana, listaManzana)
-            actualizarManzanas(listaManzana,imgManzana,)
-            checarColisiones(listaManzana, canasta)
+            actualizarManzanas(listaManzana,imgManzana)
+            checarColisiones(listaManzana,canasta,puntos)
+
+
             #Manzanas envenenadas
             dibujarManzanas(ventana, listaManzanaP)
             actualizarManzanas(listaManzanaP, imgManzanaP)
-            checarColisiones(listaManzanaP,canasta)
+            checarColisiones(listaManzanaP,canasta,puntosP)
+            puntosM = calcularPuntos(puntos, 50)
+            puntosMP=calcularPuntos(puntosP, 500)
+
+            pTotales=str(puntosTotal(puntosM,puntosMP))
+            textoPuntos = fuente.render(pTotales, 3, BLANCO)
+            ventana.blit(textoPuntos, (700, 20))
 
         elif estadoJuego==INSTRUCCIONES:
+
             ventana.blit(imgPersonajeGanar, (-20, -150))
             ventana.blit(spriteBtnInst.image, spriteBtnInst.rect)
             texto = fuente.render("Atrapa todas las manzanas que puedas ", 1, BLANCO)
@@ -344,11 +369,15 @@ def dibujar():
             ventana.blit(textoMP, (450, 430))
 
             ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
+
+
+
         elif estadoJuego==CREDITOS:
             ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
             ventana.blit(spriteBtnTCreditos.image, spriteBtnTCreditos.rect)
             listaC=regresarCreditos("Referencias.txt")
             creaCreditos(ventana,listaC)
+
 
 
 
