@@ -16,6 +16,21 @@ AZUL = (0, 0, 255)
 NEGRO = (0, 0, 0)
 
 reloj = pygame.time.Clock()
+
+def creaCreditos(ventana,lista):
+    fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 14)
+    xOrigen=80
+    yOrigen=100
+
+    for dato in lista:
+        datox=fuente.render(dato,1,BLANCO)
+        ventana.blit(datox, (xOrigen, yOrigen))
+        yOrigen+=30
+
+
+
+
+
 def crearManzanas(listaManzana, imgManzana,cantidad):
     contador = 0
     for manzanita in range(1,cantidad):  # 1..5
@@ -58,6 +73,20 @@ def actualizarManzanas(listaManzana,imgManzana,):
             listaManzana.remove(manzana)
 
 
+#Funcion que trasnforma los creditos a string
+def regresarCreditos(archivo):
+    listaCreditos=[]
+    entrada = open("Referencias", "r",encoding="UTF-8")
+    for linea in entrada:
+        lineax=linea.rstrip("\n")
+        listaCreditos.append(lineax)
+
+    entrada.close()
+    return listaCreditos
+
+
+
+
 
 # de momento no hace nada , hay que ver como actualziarla con el juego que haras
 def checarColisiones(listaManzana, canasta):
@@ -92,6 +121,7 @@ def dibujar():
     imgBtnTitulo=pygame.image.load("Titulo.png")
     imgBtnVolver=pygame.image.load("VolverMenu.png")
     imgBtnInst=pygame.image.load("InInstrucc.png")
+    imgBtnTCreditos= pygame.image.load("TCreditos.png")
 #Sonido
 
 
@@ -128,7 +158,7 @@ def dibujar():
     spriteBtnTitulo = pygame.sprite.Sprite()
     spriteBtnTitulo.image = imgBtnTitulo
     spriteBtnTitulo.rect = imgBtnTitulo.get_rect()
-    spriteBtnTitulo.rect.left = ANCHO - 180 - spriteBtnTitulo.rect.width // 2-20
+    spriteBtnTitulo.rect.left = ANCHO - 180 - spriteBtnTitulo.rect.width // 2-20-5
     spriteBtnTitulo.rect.top = ALTO // 3 - spriteBtnTitulo.rect.height-40
 
 #Boton de volver
@@ -143,6 +173,13 @@ def dibujar():
     spriteBtnInst.rect = imgBtnInst.get_rect()
     spriteBtnInst.rect.left = ANCHO - spriteBtnInst.rect.width-40
     spriteBtnInst.rect.top = 20 + spriteBtnInst.rect.height
+#Titulo de creditos
+    spriteBtnTCreditos = pygame.sprite.Sprite()
+    spriteBtnTCreditos.image = imgBtnTCreditos
+    spriteBtnTCreditos.rect = imgBtnTCreditos.get_rect()
+    spriteBtnTCreditos.rect.left = ANCHO//2 -spriteBtnTCreditos.rect.width
+    spriteBtnTCreditos.rect.top = 30
+
 
 #TExtos
     fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 18)
@@ -169,6 +206,19 @@ def dibujar():
     listaManzanaP= []
     crearManzanas(listaManzana,imgManzana,1000)
     crearManzanas(listaManzanaP, imgManzanaP,20)
+
+    #Manzanas para instrucciones
+    # Manzanas
+    manzana = pygame.sprite.Sprite()
+    manzana.image = imgManzana
+    manzana.rect = imgManzana.get_rect()
+    manzana.rect.left = 400
+    manzana.rect.top = 480
+    manzanaP = pygame.sprite.Sprite()
+    manzanaP.image = imgManzanaP
+    manzanaP.rect = imgManzanaP.get_rect()
+    manzanaP.rect.left = 400
+    manzanaP.rect.top = 420
     # Personaje. Canasta
     imgCanasta = pygame.image.load("Canasta.png")
 
@@ -203,6 +253,20 @@ def dibujar():
                     if xm >= xbj and xm <= xbj + abj:
                         if ym >= ybj and ym <= ybj + albj:
                             estadoJuego = INSTRUCCIONES
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                if estadoJuego == MENU:
+                    xbj, ybj, abj, albj = spriteBtnCreditos.rect
+                    if xm >= xbj and xm <= xbj + abj:
+                        if ym >= ybj and ym <= ybj + albj:
+                            estadoJuego = CREDITOS
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                if estadoJuego == CREDITOS:
+                    xbj, ybj, abj, albj = spriteBtnVolver.rect
+                    if xm >= xbj and xm <= xbj + abj:
+                        if ym >= ybj and ym <= ybj + albj:
+                            estadoJuego = MENU
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 xm, ym = pygame.mouse.get_pos()
                 if estadoJuego == INSTRUCCIONES:
@@ -267,11 +331,25 @@ def dibujar():
             texto4=fuente.render("automaticamente pero perderas puntos.",1,BLANCO)
             texto5=fuente.render("¡Buena suerte!",1,BLANCO)
             ventana.blit(texto, (400, 200))
-            ventana.blit(texto2, (400,260))
-            ventana.blit(texto3, (400, 320))
-            ventana.blit(texto4, (400,380 ))
-            ventana.blit(texto5, (400,440 ))
+            ventana.blit(texto2, (400,240))
+            ventana.blit(texto3, (400, 280))
+            ventana.blit(texto4, (400,320 ))
+            ventana.blit(texto5, (400,360 ))
+#Manzanas
+            ventana.blit(manzana.image, manzana.rect)
+            ventana.blit(manzanaP.image, manzanaP.rect)
+            textoM = fuente.render("+ 50 puntos",3,BLANCO)
+            textoMP=fuente.render("-500 puntos",3,BLANCO)
+            ventana.blit(textoM, (450, 490))
+            ventana.blit(textoMP, (450, 430))
+
             ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
+        elif estadoJuego==CREDITOS:
+            ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
+            ventana.blit(spriteBtnTCreditos.image, spriteBtnTCreditos.rect)
+            listaC=regresarCreditos("Referencias.txt")
+            creaCreditos(ventana,listaC)
+
 
 
             # Actualizar
@@ -291,5 +369,5 @@ def main():
     dibujar()
 
 
-+
+
 main()
