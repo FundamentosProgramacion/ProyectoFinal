@@ -15,7 +15,19 @@ ROJO = (255, 0, 0)
 AZUL = (0, 0, 255)
 NEGRO = (0, 0, 0)
 
-clock = pygame.time.Clock()
+
+
+def moreApples(ventana,tiempo,listaManzana,imgManzana,cantidad):
+    contador=0
+    while tiempo>=10:
+        contador+=1
+        if contador%15==0:
+
+            newlist=crearManzanas(listaManzana, imgManzana, cantidad)
+    return  newlist
+
+
+
 
 def creaCreditos(ventana,lista):
     fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 14)
@@ -72,7 +84,7 @@ def dibujarManzanas(ventana, listaManzana):
 
 
 
-def actualizarManzanas(listaManzana,imgManzana,):
+def actualizarManzanas(listaManzana,imgManzana):
     # MOVER
     contador=0
     for manzana in listaManzana:
@@ -127,6 +139,9 @@ def dibujar():
     ventana = pygame.display.set_mode((ANCHO, ALTO))  # Crea la ventana de dibujo
     reloj = pygame.time.Clock()  # Para limitar los fps
     termina = False  # Bandera para saber si termina la ejecución
+#Timer
+
+
 
     # Imágenes/Fondo
     imgFondo = pygame.image.load("Menu.png")
@@ -138,6 +153,9 @@ def dibujar():
     imgBtnVolver=pygame.image.load("VolverMenu.png")
     imgBtnInst=pygame.image.load("InInstrucc.png")
     imgBtnTCreditos= pygame.image.load("TCreditos.png")
+    imgBtnPerdiste=pygame.image.load("button_perdiste.png")
+    imgBtnGanaste=pygame.image.load("button_ganaste.png")
+
 #Sonido
 
 
@@ -145,6 +163,7 @@ def dibujar():
 
 #Imagen pantalla ganar
     imgPersonajeGanar=pygame.image.load("PantallaGanar.png")
+    imgPerder=pygame.image.load("Perder.png")
 #Boton jugar
     spriteBtnJugar = pygame.sprite.Sprite()
     spriteBtnJugar.image = imgBtnJugar
@@ -196,6 +215,18 @@ def dibujar():
     spriteBtnTCreditos.rect.left = ANCHO//2 -spriteBtnTCreditos.rect.width
     spriteBtnTCreditos.rect.top = 30
 
+#Boton ganaste
+    spriteBtnPerdiste = pygame.sprite.Sprite()
+    spriteBtnPerdiste.image = imgBtnPerdiste
+    spriteBtnPerdiste.rect = imgBtnPerdiste.get_rect()
+    spriteBtnPerdiste.rect.left = ANCHO // 2 - spriteBtnPerdiste.rect.width+150
+    spriteBtnPerdiste.rect.top = 30
+#Boton perdiste
+    spriteBtnGanaste = pygame.sprite.Sprite()
+    spriteBtnGanaste .image = imgBtnGanaste
+    spriteBtnGanaste .rect = imgBtnGanaste .get_rect()
+    spriteBtnGanaste .rect.left = ANCHO // 2 - spriteBtnGanaste .rect.width+300
+    spriteBtnGanaste .rect.top = 30
 
 #TExtos
     fuente = pygame.font.SysFont("meiryomeiryomeiryouimeiryouiitalic", 18)
@@ -222,6 +253,40 @@ def dibujar():
     listaManzanaP= []
     crearManzanas(listaManzana,imgManzana,1000)
     crearManzanas(listaManzanaP, imgManzanaP,20)
+#Se que de esta manera no es la mas eficeinte , sin embargo no me salia de otra manera para generar el tiempo en las que se
+    #generaban todas las manzana TwT
+
+    listaNew=[]
+    crearManzanas(listaNew, imgManzana, 900)
+    listaN2=[]
+    crearManzanas(listaN2, imgManzana, 700)
+    listaN3 = []
+    crearManzanas(listaN3, imgManzana, 900)
+    listaN4 = []
+    crearManzanas(listaN4, imgManzana, 900)
+    listaN5 = []
+    crearManzanas(listaN5, imgManzana, 300)
+    listaN6 = []
+    crearManzanas(listaN6, imgManzana, 900)
+    listaN7 = []
+    crearManzanas(listaN7, imgManzana, 900)
+    #POISON
+    listaNewP = []
+    crearManzanas(listaNew, imgManzanaP, 200)
+    listaN2P = []
+    crearManzanas(listaN2, imgManzanaP, 50)
+    listaN3P = []
+    crearManzanas(listaN3, imgManzanaP, 10)
+    listaN4P = []
+    crearManzanas(listaN4, imgManzanaP, 20)
+    listaN5P = []
+    crearManzanas(listaN5, imgManzanaP, 40)
+    listaN6P = []
+    crearManzanas(listaN6, imgManzanaP, 90)
+    listaN7P = []
+    crearManzanas(listaN7, imgManzanaP, 10)
+
+
 
     #Manzanas para instrucciones
     # Manzanas
@@ -248,7 +313,31 @@ def dibujar():
     puntos=[]
     puntosP=[]
 
-#PEGA QUI LO QUE quitaste
+    puntosT=[]
+    puntosX=[]
+    puntosY=[]
+    puntosZ=[]
+    puntosA=[]
+    puntosB=[]
+    puntosC=[]
+
+
+    puntosTP = []
+    puntosXP= []
+    puntosYP = []
+    puntosZP = []
+    puntosAP = []
+    puntosBP = []
+    puntosCP = []
+
+
+
+    #Timers
+    counter, text = 3250, '3250'.rjust(3)
+    pygame.time.set_timer(pygame.USEREVENT, 1000)
+    font = pygame.font.SysFont('Consolas', 30)
+
+    timeri = 105
 
 
     while not termina:  # Ciclo principal
@@ -263,6 +352,12 @@ def dibujar():
                     if xm>=xbj and xm<=xbj+abj:
                         if ym>=ybj and ym<=ybj+albj:
                             estadoJuego = JUEGO # Cambia de estado
+
+
+
+
+
+
 
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 xm, ym = pygame.mouse.get_pos()
@@ -292,11 +387,26 @@ def dibujar():
                     if xm >= xbj and xm <= xbj + abj:
                         if ym >= ybj and ym <= ybj + albj:
                             estadoJuego = MENU
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                if estadoJuego == GANA:
+                    xbj, ybj, abj, albj = spriteBtnVolver.rect
+                    if xm >= xbj and xm <= xbj + abj:
+                        if ym >= ybj and ym <= ybj + albj:
+                            estadoJuego = MENU
+                            counter, text = 3250, '3250'.rjust(3)
+                            pygame.time.set_timer(pygame.USEREVENT, 1000)
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                if estadoJuego == PIERDE:
+                    xbj, ybj, abj, albj = spriteBtnVolver.rect
+                    if xm >= xbj and xm <= xbj + abj:
+                        if ym >= ybj and ym <= ybj + albj:
+                            estadoJuego = MENU
+                            counter, text = 3250, '3250'.rjust(3)
+                            pygame.time.set_timer(pygame.USEREVENT, 1000)
 
             if evento.type == pygame.KEYDOWN and estadoJuego==JUEGO:
-
-
-
 
                 if evento.key == pygame.K_LEFT :
                     longitud=-10
@@ -310,6 +420,9 @@ def dibujar():
 
             if evento.type==pygame.KEYUP :
                 movercanasta= False
+
+                # Timer
+
 
 
 
@@ -326,6 +439,9 @@ def dibujar():
             ventana.blit(spriteBtnPuntajes.image, spriteBtnPuntajes.rect)
             ventana.blit(spriteBtnTitulo.image, spriteBtnTitulo.rect)
         elif estadoJuego == JUEGO:
+            font = pygame.font.SysFont('Consolas', 30)
+
+
             if movercanasta :
                 canasta.rect.left += longitud
             ventana.blit(canasta.image, canasta.rect)
@@ -339,12 +455,96 @@ def dibujar():
             dibujarManzanas(ventana, listaManzanaP)
             actualizarManzanas(listaManzanaP, imgManzanaP)
             checarColisiones(listaManzanaP,canasta,puntosP)
-            puntosM = calcularPuntos(puntos, 50)
-            puntosMP=calcularPuntos(puntosP, 500)
 
-            pTotales=str(puntosTotal(puntosM,puntosMP))
+
+            counter -= 1
+            newcounter = counter // 27
+            text = str(newcounter).rjust(3) if newcounter > 0 else '¡Time Over!'
+            ventana.blit(font.render(text, True, (255, 255, 255)), (32, 48))
+
+            puntosM = calcularPuntos(puntos, 50)
+
+            puntosMP = calcularPuntos(puntosP, 500)
+            #Manzana NORMALES <3
+            if newcounter <= timeri:
+
+
+
+
+                dibujarManzanas(ventana, listaNew)
+                actualizarManzanas(listaNew, imgManzana)
+                checarColisiones(listaNew, canasta, puntosT)
+
+                puntosM+= calcularPuntos(puntosT, 50)
+
+
+
+
+
+
+
+            if newcounter <= timeri-15:
+                dibujarManzanas(ventana, listaN2)
+                actualizarManzanas(listaN2, imgManzana)
+                checarColisiones(listaN2, canasta, puntosX)
+                puntosM += calcularPuntos(puntosX, 50)
+
+
+
+            if newcounter <= timeri - 30:
+                dibujarManzanas(ventana, listaN3)
+                actualizarManzanas(listaN3, imgManzana)
+                checarColisiones(listaN3, canasta, puntosY)
+                puntosM += calcularPuntos(puntosY, 50)
+
+
+            if newcounter <= timeri-45:
+                dibujarManzanas(ventana, listaN4)
+                actualizarManzanas(listaN4, imgManzana)
+                checarColisiones(listaN4, canasta, puntosZ)
+                puntosM += calcularPuntos(puntosZ, 50)
+
+
+            if newcounter <= timeri-60:
+                dibujarManzanas(ventana, listaN5)
+                actualizarManzanas(listaN5, imgManzana)
+                checarColisiones(listaN5, canasta, puntosA)
+                puntosM += calcularPuntos(puntosA, 50)
+
+
+            if newcounter <= timeri-75:
+                dibujarManzanas(ventana, listaN6)
+                actualizarManzanas(listaN6, imgManzana)
+                checarColisiones(listaN6, canasta, puntosB)
+                puntosM += calcularPuntos(puntosB, 50)
+
+            if newcounter <= timeri-88:
+                dibujarManzanas(ventana, listaN7)
+                actualizarManzanas(listaN7, imgManzana)
+                checarColisiones(listaN7, canasta, puntosC)
+                puntosM += calcularPuntos(puntosC, 50)
+
+
+
+            #Poion APPLE
+
+
+            pTotales = str(puntosTotal(puntosM, puntosMP))
             textoPuntos = fuente.render(pTotales, 3, BLANCO)
             ventana.blit(textoPuntos, (700, 20))
+
+
+            if newcounter==0:
+                if int(pTotales)<0:
+                    estadoJuego=PIERDE
+                else:
+                    estadoJuego=GANA
+
+
+
+
+
+
 
         elif estadoJuego==INSTRUCCIONES:
 
@@ -377,6 +577,23 @@ def dibujar():
             ventana.blit(spriteBtnTCreditos.image, spriteBtnTCreditos.rect)
             listaC=regresarCreditos("Referencias.txt")
             creaCreditos(ventana,listaC)
+        elif estadoJuego==PIERDE:
+            font1 = pygame.font.SysFont('Consolas', 80)
+            ventana.blit(imgPerder, (0,0))
+            ventana.blit(spriteBtnPerdiste.image, spriteBtnPerdiste.rect)
+
+            textoPuntos = font1.render(pTotales, 3, BLANCO)
+            ventana.blit(textoPuntos, (300, 150))
+            ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
+        elif estadoJuego == GANA:
+            font1 = pygame.font.SysFont('Consolas', 100)
+            ventana.blit(imgPersonajeGanar, (0, -150))
+            ventana.blit(spriteBtnGanaste.image, spriteBtnGanaste.rect)
+
+
+            textoPuntos = font1.render(pTotales, 3, BLANCO)
+            ventana.blit(textoPuntos, (450, 200))
+            ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
 
 
 
