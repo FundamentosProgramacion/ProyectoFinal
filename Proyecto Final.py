@@ -3,12 +3,12 @@
 
 import pygame
 
-
 # Dimensiones de la pantalla
 ANCHO = 800
 ALTO = 600
 
-BLANCO = (255,255,255)
+BLANCO = (255, 255, 255)
+
 
 # Dibuja las plataformas
 def dibujarPlataformas(ventana, lista):
@@ -17,8 +17,8 @@ def dibujarPlataformas(ventana, lista):
 
 
 # Crea una lista con las posiciones de las plataformas
-def crearListaPlataformas (imgPlataformas, lista):
-    for altura in range(600, -1 , -300):
+def crearListaPlataformas(imgPlataformas, lista):
+    for altura in range(600, -1, -300):
         plataforma = pygame.sprite.Sprite()
         plataforma.image = imgPlataformas
         plataforma.rect = imgPlataformas.get_rect()
@@ -28,7 +28,7 @@ def crearListaPlataformas (imgPlataformas, lista):
 
 
 def lugarCanon(imgcanon, ventana, plataforma):
-    for cuenta in range(1,3):
+    for cuenta in range(1, 3):
         canon = pygame.sprite.Sprite()
         canon.image = imgcanon
         canon.rect = imgcanon.get_rect()
@@ -54,27 +54,27 @@ def dibujar():
     ACERCA_DE = 2
     JUEGO = 3
     PUNTAJES = 4
+    estadoJuego = JUEGO
 
-    #PLATAFORMAS
+    # PLATAFORMAS
     imgPlataformas = pygame.image.load("plataforma_Alfa.png")
     plataforma = pygame.sprite.Sprite()
     plataforma.image = imgPlataformas
     plataforma.rect = imgPlataformas.get_rect()
-    listaPlataformas =[]
+    listaPlataformas = []
 
-    #PERSONAJE
+    # PERSONAJE
     imgPersonaje = pygame.image.load("Personaje_Alfa.png")
     personaje = pygame.sprite.Sprite()
     personaje.image = imgPersonaje
     personaje.rect = imgPersonaje.get_rect()
     personaje.rect.left = 150
-    personaje.rect.top = (600-plataforma.rect.height) - personaje.rect.height
+    personaje.rect.top = (600 - plataforma.rect.height) - personaje.rect.height
 
-    #CAÑON
+    # CAÑON
     imgcanon = pygame.image.load("canon_Alfa.png")
 
-
-    #ESCALERA
+    # ESCALERA
     imgescalera = pygame.image.load("escaleras_Alfa.png")
     escalera = pygame.sprite.Sprite()
     escalera.image = imgescalera
@@ -82,8 +82,10 @@ def dibujar():
     escalera.rect.left = 550
     escalera.rect.top = (600 - plataforma.rect.height) - escalera.rect.height
 
-
-
+    # BOOLEANOS
+    moverPersonajeD = False
+    moverPersonajeL = False
+    saltarVertical = False
 
     while not termina:  # Ciclo principal
         # Procesa los eventos que recibe el programa
@@ -91,12 +93,33 @@ def dibujar():
             if evento.type == pygame.QUIT:  # El usuario hizo click en el botón de salir
                 termina = True
 
+            if estadoJuego == JUEGO:
+                # Revisa si la tecla especifica ESTA siendo presionada
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_LEFT:
+                        moverPersonajeL = True
+                    elif evento.key == pygame.K_RIGHT:
+                        moverPersonajeD = True
+                    elif evento.key == pygame.K_UP:
+                        for tem in range(0, 4615, 1):
+                            temP = tem/10000
+                            personaje.rect.top += int(40 - 4.9 * (temP ** 2))
+                            print(personaje.rect.top)
+
+                # Revisa si la tecla especifica NO ESTA siendo presionada
+                elif evento.type == pygame.KEYUP:
+                    if evento.key == pygame.K_LEFT:
+                        moverPersonajeL = False
+                    elif evento.key == pygame.K_RIGHT:
+                        moverPersonajeD = False
+
+
         # Borrar pantalla
         ventana.fill(BLANCO)
 
         # Fondos y Estados en el Que esta el Juego
         edoDeJuego = JUEGO
-        # BUSCAR FONDO Y BOTONES
+        # BUSCAR FONDO Y BOTONES!!!!
         if edoDeJuego == MENU:
             pass
         if edoDeJuego == JUEGO:
@@ -105,20 +128,24 @@ def dibujar():
             dibujarPlataformas(ventana, listaPlataformas)
 
             # Dibujo de Cañon
-            lugarCanon(imgcanon, ventana, plataforma) # Es una funcion para vers. ALFA
+            lugarCanon(imgcanon, ventana, plataforma)  # Es una funcion para vers. ALFA
 
             # Dibujo de Escaleras
             ventana.blit(escalera.image, escalera.rect)
 
             # Dibujo de personaje
             ventana.blit(personaje.image, personaje.rect)
-
-
+            # Movimiento del personaje
+            if moverPersonajeL:
+                personaje.rect.left -= 3
+            if moverPersonajeD:
+                personaje.rect.left += 3
 
 
 
         pygame.display.flip()  # Actualiza trazos
         reloj.tick(40)  # 40 fps
+        #print(reloj.get_fps())
 
     # Después del ciclo principal
     pygame.quit()  # termina pygame
