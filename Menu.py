@@ -616,7 +616,7 @@ def dibujar():
 
 
             textoPuntos = font1.render(pTotales, 3, BLANCO)
-            maxScore(textoPuntos)
+
             ventana.blit(textoPuntos, (450, 200))
             ventana.blit(spriteBtnVolver.image, spriteBtnVolver.rect)
         elif estadoJuego == PUNTAJES:
