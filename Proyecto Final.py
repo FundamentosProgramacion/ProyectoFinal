@@ -97,7 +97,7 @@ def dibujar():
     #Contador
     contador = 0
 
-
+###############
 
     while not termina:  # Ciclo principal
         # Procesa los eventos que recibe el programa
