@@ -18,7 +18,7 @@ def dibujarPlataformas(ventana, lista):
 
 # Crea una lista con las posiciones de las plataformas
 def crearListaPlataformas(imgPlataformas, lista):
-    for altura in range(600, -1, -300):
+    for altura in range(600, 0, -300):
         plataforma = pygame.sprite.Sprite()
         plataforma.image = imgPlataformas
         plataforma.rect = imgPlataformas.get_rect()
@@ -85,7 +85,19 @@ def dibujar():
     # BOOLEANOS
     moverPersonajeD = False
     moverPersonajeL = False
-    saltarVertical = False
+    estaSaltando = False
+    puedeEscalar = False
+    estaEscalando = False
+    subeEscalera = False
+    bajaEscalera = False
+
+     # Timer de fps
+    pygame.time.set_timer(pygame.USEREVENT+1, 25)
+
+    #Contador
+    contador = 0
+
+
 
     while not termina:  # Ciclo principal
         # Procesa los eventos que recibe el programa
@@ -96,23 +108,37 @@ def dibujar():
             if estadoJuego == JUEGO:
                 # Revisa si la tecla especifica ESTA siendo presionada
                 if evento.type == pygame.KEYDOWN:
+                    #Para Movimiento X
                     if evento.key == pygame.K_LEFT:
                         moverPersonajeL = True
                     elif evento.key == pygame.K_RIGHT:
                         moverPersonajeD = True
-                    elif evento.key == pygame.K_UP:
-                        for tem in range(0, 4615, 1):
-                            temP = tem/10000
-                            personaje.rect.top += int(40 - 4.9 * (temP ** 2))
-                            print(personaje.rect.top)
+                    #Para el salto
+                    elif evento.key == pygame.K_SPACE and not estaSaltando:
+                        estaSaltando = True
+                        contador = 0
+                        y0 = personaje.rect.bottom
+                    # Para Movimiento escalera
+                    elif evento.key == pygame.K_UP and puedeEscalar:
+                        estaEscalando = True
+                        subeEscalera = True
+                    elif evento.key == pygame.K_DOWN and puedeEscalar:
+                        estaEscalando = True
+                        bajaEscalera = True
+
 
                 # Revisa si la tecla especifica NO ESTA siendo presionada
                 elif evento.type == pygame.KEYUP:
+                    #Para movimiento X
                     if evento.key == pygame.K_LEFT:
                         moverPersonajeL = False
                     elif evento.key == pygame.K_RIGHT:
                         moverPersonajeD = False
-
+                    # Para Movimiento Y en Escalera
+                    elif evento.key == pygame.K_UP and estaEscalando:  # -OJO-  BUG DE ESCALERA INFINITA
+                        subeEscalera = False
+                    elif evento.key == pygame.K_DOWN and puedeEscalar:
+                        bajaEscalera = False
 
         # Borrar pantalla
         ventana.fill(BLANCO)
@@ -128,24 +154,53 @@ def dibujar():
             dibujarPlataformas(ventana, listaPlataformas)
 
             # Dibujo de Cañon
-            lugarCanon(imgcanon, ventana, plataforma)  # Es una funcion para vers. ALFA
+            lugarCanon(imgcanon, ventana, plataforma)  # Es una funcion para vers. ALFA.. Ponerlos manuales?
 
             # Dibujo de Escaleras
             ventana.blit(escalera.image, escalera.rect)
+            areaMediaEscalera = escalera.rect.left+20, escalera.rect.left+40
 
             # Dibujo de personaje
             ventana.blit(personaje.image, personaje.rect)
-            # Movimiento del personaje
+            mitadPersonaje = (personaje.rect.left + personaje.rect.right)/2
+
+
+
+            # Revisa si el presonaje esta en posicion de escalar
+            if mitadPersonaje in range(areaMediaEscalera[0], areaMediaEscalera[1]) and not estaSaltando:
+                puedeEscalar = True
+            if personaje.rect.bottom == escalera.rect.top or personaje.rect.bottom == escalera.rect.bottom:
+                estaEscalando = False
+            if subeEscalera and not personaje.rect.bottom == escalera.rect.top:
+                personaje.rect.bottom -= 2
+            if bajaEscalera and not personaje.rect.bottom == escalera.rect.bottom:
+                personaje.rect.bottom += 2
+            if estaEscalando:
+                personaje.rect.left = escalera.rect.left
+                moverPersonajeL = False
+                moverPersonajeD = False
+
+            if personaje.rect.bottom == escalera.rect.top:
+                puedeEscalar = False
+
+            # Movimiento del personaje Derecha izquierda
             if moverPersonajeL:
                 personaje.rect.left -= 3
             if moverPersonajeD:
                 personaje.rect.left += 3
 
-
+            #Utiliza la ecacion de fisica para calcular su altura en un momento determinado. Cuanta con Gravedad y Vo
+            if estaSaltando:
+                moveVertical = 4.1097*contador-.5*0.25*contador**2 # goriginal = .221 VO original = 4.99
+                personaje.rect.bottom = y0 - int(moveVertical)
+                if y0 < personaje.rect.bottom:
+                    personaje.rect.bottom = y0
+                    estaSaltando = False
 
         pygame.display.flip()  # Actualiza trazos
         reloj.tick(40)  # 40 fps
-        #print(reloj.get_fps())
+        contador += 1
+
 
     # Después del ciclo principal
     pygame.quit()  # termina pygame
