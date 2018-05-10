@@ -383,7 +383,7 @@ def dibujar(nombreJugador):
             PC = fuente2.render("PC", 1, BLANCO)
             ventana.blit(PC, (100, 40))
             pygame.draw.line(ventana,VERDE,(100,100),((100+puntosVida),100),20)
-            pygame.draw.line(ventana, VERDE, (500, 100), ((500+puntosVidaPC), 100),20)
+            pygame.draw.line(ventana, VERDE, (501, 100), ((500+puntosVidaPC), 100),20)
 
             ventana.blit(Guita.image, Guita.rect)
             ventana.blit(Guita2.image, Guita2.rect)
