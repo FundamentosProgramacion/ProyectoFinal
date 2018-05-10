@@ -372,6 +372,7 @@ def dibujar(nombreJugador):
                 estadoJuego = Gana  # termina por que gana
             elif puntos2>= 21:
                 JugadorGanador = 1
+
                 menos= quitarPuntos(puntos)
                 puntosVidaPC= puntosVidaPC + menos
                 estadoJuego = Gana
@@ -415,7 +416,7 @@ def dibujar(nombreJugador):
 
         elif estadoJuego == Gana:
             music.stop()
-            if JugadorGanador== 0:
+            if JugadorGanador== 1:
                  # texto gana
                 texto = fuente.render(("Gano Jugador"), 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
@@ -425,7 +426,7 @@ def dibujar(nombreJugador):
                 salida.write("\n")
                 salida.close()
 
-            elif JugadorGanador== 1:
+            elif JugadorGanador== 2:
                  # texto gana
                 texto = fuente.render("Gano PC", 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))

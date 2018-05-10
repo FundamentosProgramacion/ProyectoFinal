@@ -95,14 +95,32 @@ def checarcolisiones(listaBalas, listaEnemi):
                 break
     return destruidos
 
-def checarcolisiones2(listaBalas, Get):
+def checarcolisiones2(listaBalas, get):
     golpe = 0
 
     for ib in range(len(listaBalas) - 1, -1, -1):
         bala = listaBalas[ib]
         xb, yb, ab, alb = bala.rect
-        xe, ye, ae, ale =Get
-        if (xb >= xe and xb <= xe + ae and yb >= ye and yb  <= ye + ale) or (xb >= xe and xb <= xe + ae and (yb+alb) >= ye and (yb+alb)  <= ye + ale):
+        xe, ye, ae, ale = get
+        if (xb >= xe and xb <= (xe + ae)-ab and yb >= ye and yb  <= ye + ale) or (xb >= xe and xb <= (xe + ae)-ab and (yb+alb) >= ye and (yb+alb)  <= ye + ale):
+            listaBalas.remove(bala)
+                # listaEnemi[ie].image = imgEnemi #papa enseño a poner otra imagen
+            golpe += 1
+                # efecto de sonido
+            break
+    return golpe
+def checarcolisiones3(listaBalas, get):
+    golpe = 0
+
+    for ib in range(len(listaBalas) - 1, -1, -1):
+        bala = listaBalas[ib]
+        xb, yb, ab, alb = bala.rect
+        xe, ye, ae, ale = get
+        print(xe)
+        print(ye)
+        print(ae)
+        print(ale)
+        if (xb >= xe+145 and xb <= 750 and yb >= ye and yb  <= ye + ale) or (xb >= xe+145  and xb <= 750  and (yb+alb) >= ye and (yb+alb)  <= ye + ale):
             listaBalas.remove(bala)
                 # listaEnemi[ie].image = imgEnemi #papa enseño a poner otra imagen
             golpe += 1
@@ -166,8 +184,8 @@ def dibujar(nombreJugador):
     spriteBtnHero.rect.top = 556
 
  #Musica
-    pygame.mixer.init()
-    music = pygame.mixer.Sound("musicaFondo.wav")
+
+
 
 
     # Estados del juego
@@ -213,14 +231,14 @@ def dibujar(nombreJugador):
     Guita = pygame.sprite.Sprite()
     Guita.image = imgGuita
     Guita.rect = imgGuita.get_rect()
-    Guita.rect.left = 550
+    Guita.rect.right = 550+ Guita.rect.width // 2
     Guita.rect.top = ALTO // 2 - Guita.rect.width // 2
 
     imgGuitab = pygame.image.load("Hero/hero1.png")
     Guitab = pygame.sprite.Sprite()
     Guitab.image = imgGuitab
     Guitab.rect = imgGuitab.get_rect()
-    Guitab.rect.left = 550
+    Guitab.rect.left = 550- Guita.rect.width // 2
     Guitab.rect.top = ALTO // 2 - Guitab.rect.width // 2
 
     #GuitarManNivel 2
@@ -228,14 +246,14 @@ def dibujar(nombreJugador):
     Guita2 = pygame.sprite.Sprite()
     Guita2.image = imgGuita2
     Guita2.rect = imgGuita2.get_rect()
-    Guita2.rect.left = 0
+    Guita2.rect.right = 150 +Guita.rect.width // 2
     Guita2.rect.top = ALTO // 2 - Guita2.rect.width // 2
 
     imgGuita2b = pygame.image.load("Hero2/heroIzq1.png")
     Guita2b = pygame.sprite.Sprite()
     Guita2b.image = imgGuita2b
     Guita2b.rect = imgGuita2b.get_rect()
-    Guita2b.rect.left = 0
+    Guita2b.rect.left = - Guita2b.rect.width // 2
     Guita2b.rect.top = ALTO // 2 - Guita2b.rect.width // 2
 
     # Bala
@@ -280,7 +298,7 @@ def dibujar(nombreJugador):
                             estadoJuego = Nivel2
                     if xm >= xbm and xm <= xm + abm:
                         if ym >= ybm and ym <= ybm + albm:
-                            estadoJuego = INFO
+                            estadoJuego = COMOJUGAR
 
                     elif xm >= xbi and xm <= xbi + abi:
                         if ym >= ybi and ym <= ybi + albi:
@@ -311,7 +329,7 @@ def dibujar(nombreJugador):
                     bala.image = imgBala
                     bala.rect = imgBala.get_rect()
                     bala.rect.left = Guita.rect.left - bala.rect.width
-                    bala.rect.top = Guita.rect.top+ 50
+                    bala.rect.top = Guita.rect.top+ 75
                     listaBalas.append(bala)
 
         # Borrar pantalla
@@ -330,6 +348,7 @@ def dibujar(nombreJugador):
 
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
+
             dibujarEnemi(ventana, listaEnemi)
             dibujarBalas(ventana, listaBalas)
             dibujarEnemi2(ventana, listaEnemi2)
@@ -369,29 +388,52 @@ def dibujar(nombreJugador):
 
                 menos= quitarPuntos(puntos)
                 puntosVida= puntosVida - menos
-                estadoJuego = Gana
+                estadoJuego = Nivel2
             elif puntos>= 21 and puntos2>=21:
-                estadoJuego = Gana
+                estadoJuego = Nivel2
 
 
         #Juego Nivel 2
         elif estadoJuego == Nivel2:
+
 
             #Lineas de Vida
             nombre = fuente2.render(nombreJugador, 1, BLANCO)
             ventana.blit(nombre, (500, 40))
             PC = fuente2.render("PC", 1, BLANCO)
             ventana.blit(PC, (100, 40))
-            pygame.draw.line(ventana,VERDE,(100,100),((100+puntosVida),100),20)
-            pygame.draw.line(ventana, VERDE, (500, 100), ((500+puntosVidaPC), 100),20)
+            pygame.draw.line(ventana, ROJO, (100, 100), ((200), 100), 20)
+            pygame.draw.line(ventana, ROJO, (490, 100), ((590), 100), 20)
+            pygame.draw.line(ventana,VERDE,(100,100),((100+puntosVidaPC),100),20)
+            pygame.draw.line(ventana, VERDE, (490, 100), ((490+puntosVida), 100),20)
 
             ventana.blit(Guita.image, Guita.rect)
             ventana.blit(Guita2.image, Guita2.rect)
             dibujarBalas(ventana, listaBalas)
             actualizarBalas(listaBalas)
+            pygame.mixer.init()
+            pygame.mixer.music.load('SNA.mp3')
+            clock = pygame.time.Clock()
+            pygame.mixer.music.play()
+            while pygame.mixer.music.get_busy():
+                clock.tick(1000)
 
-            puntosMenos = checarcolisiones2(listaBalas,  Guita.rect)
-            puntosMenos2 = checarcolisiones2(listaBalas2,  Guita2.rect)
+            accion2= random.randint(0,50)
+            if accion2== 10 or accion2== 20 or accion2 == 30:
+                bala2 = pygame.sprite.Sprite()
+                bala2.image = imgBala2
+                bala2.rect = imgBala2.get_rect()
+                bala2.rect.left = Guita2.rect.right - 5
+                bala2.rect.top = Guita2b.rect.top + 15
+                listaBalas2.append(bala2)
+            dibujarBalas(ventana, listaBalas2)
+            # Actualizar
+            actualizarBalas(listaBalas)
+            actualizarBalas2(listaBalas2)
+
+
+            puntosMenos = checarcolisiones2(listaBalas,  Guita2.rect)
+            puntosMenos2 = checarcolisiones3(listaBalas2,  Guita.rect)
 
             puntosVida= puntosVida-puntosMenos2
             puntosVidaPC = puntosVidaPC - puntosMenos
@@ -410,11 +452,11 @@ def dibujar(nombreJugador):
 
         elif estadoJuego == Gana:
             music.stop()
-            if JugadorGanador== 0:
+            if JugadorGanador== 1:
                  # texto gana
-                texto = fuente.render(("Gano", nombreJugador), 1, BLANCO)
+                texto = fuente.render(("Gano Jugador"), 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
-            elif JugadorGanador== 1:
+            elif JugadorGanador== 0:
                  # texto gana
                 texto = fuente.render("Gano PC", 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
