@@ -1,0 +1,5 @@
+¡Bienvenido a mi juego!,,Me agrada que quieras aprender,cómo se juega,,¡Es muy fácil!,,Para empezar este menú,se mueve con las flechas,de abajo y arriba
+EXCELENTE!,,Ahora para ver,la instrucciones,del juego cambia,a la siguiente página
+¿Cómo se juega?,,Para poder mover la nave,hacia la izquierda,,Teclea flecha izquierda o, la tecla A,,Para poder mover la nave,hacia la derecha,,Teclea flecha derecha o, la tecla D
+Para disparar,teclea - espacio o,tecla W o Flecha hacia arriba
+Ahora las reglas del juego son:,,Pierdes si un enemigo llega,hasta abajo,,Ahora para poder ganar,tienes que destruir a todos,los enemigos antes,de que toquen el fondo
