@@ -325,6 +325,12 @@ def dibujar(nombreJugador):
         # Procesa los eventos que recibe el programa
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:  # El usuario hizo click en el botón de salir
+                if JugadorGanador == 1:
+                    salida = open("PUNTAJE.txt", "a", encoding='UTF-8')
+                    lineaSalida = "%s,%s" % (nombreJugador, puntosVida)
+                    salida.write(lineaSalida)
+                    salida.write("\n")
+                    salida.close()
                 termina = True
             #Menu Teclas
             if evento.type == pygame.MOUSEBUTTONUP:
@@ -510,11 +516,7 @@ def dibujar(nombreJugador):
                  # texto gana
                 texto = fuente.render(("Gano Jugador"), 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
-                salida = open("PUNTAJE.txt", "w", encoding='UTF-8')
-                lineaSalida = "%s,%s" % (nombreJugador, puntosVida)
-                salida.write(lineaSalida)
-                salida.write("\n")
-                salida.close()
+
             elif JugadorGanador== 0:
                  # texto gana
                 texto = fuente.render("Gano PC", 1, BLANCO)
@@ -556,9 +558,6 @@ def dibujar(nombreJugador):
                 if Mejor == False:
                     texto2 = fuente2.render("No eres parte de los mejores", 1, BLANCO)
                     ventana.blit(texto2, (ANCHO // 2, ALTO // 2 + 100))
-
-
-
             salida.close()
 
             # texto INFO
