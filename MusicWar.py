@@ -332,6 +332,7 @@ def dibujar(nombreJugador):
                     salida.write("\n")
                     salida.close()
                 termina = True
+
             #Menu Teclas
             if evento.type == pygame.MOUSEBUTTONUP:
                 xm, ym = pygame.mouse.get_pos()
