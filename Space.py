@@ -28,6 +28,7 @@ musicFolder = os.path.join(gameFolder, "music")
 def preguntarNombre():
     nombre = input(
         "Listo para jugar?\nAntes de comenzar, por favor escribe tu nombre.\nSe utilizará para guardar tu puntuación: ")
+    print("A JUGAR!")
     return nombre
 
 
@@ -61,7 +62,7 @@ def dibujarBarraEscudo(ventana, x, y, porcentage):
     ventana.blit(shieldImg, (10, 8))
 
 
-def inicioJuego():
+def inicioJuego(nombre):
     ventana.blit(bg, bgRect)
     typeText(ventana, "Space Shooter", 72, WIDTH / 2, HEIGHT / 4)
     ventana.blit(btnJugar.image, btnJugar.rect)
@@ -74,37 +75,94 @@ def inicioJuego():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYUP:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                xJugar, yJugar, anchoJugar, altoJugar = btnJugar.rect
+                xHighScore, yHighScore, anchoHighScore, altoHighScore = btnHighScore.rect
+                xHowTo, yHowTo, anchoHowTo, altoHowTo = btnHowToPlay.rect
+                if xm >= xJugar and xm <= xJugar + anchoJugar and ym >= yJugar and ym <= yJugar + altoJugar:
+                    dibujar(score, nombre)
+                elif xm >= xHighScore and xm <= xHighScore + anchoHighScore and ym >= yHighScore and ym <= yHighScore + altoHighScore:
+                   highScore(nombre)
+                elif xm >= xHowTo and xm <= xHowTo + anchoHowTo and ym >= yHowTo and ym <= yHowTo + altoHowTo:
+                    howToPlay(nombre)
                 menu = False
 
-
-def highScores():
+def howToPlay(nombre):
+    ventana.blit(bgHowTo, bgHowToRect)
+    ventana.blit(btnMenu.image, btnMenu.rect)
+    pygame.display.flip()
+    menu = True
+    while menu:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                xbj, ybj, abj, albj = btnMenu.rect
+                if xm >= xbj and xm <= xbj + abj:
+                    if ym >= ybj and ym <= ybj + albj:
+                        inicioJuego(nombre)
+                        menu = False
+def highScore(nombre):
     ventana.blit(bg, bgRect)
     typeText(ventana, "High Scores", 54, WIDTH / 2, HEIGHT / 5)
+    ventana.blit(btnMenu.image, btnMenu.rect)
+    entrada = open("HighScores.txt")
+    listaDupla = []
+    scores = entrada.readlines()
+    for score in scores:
+        score = score.rstrip()
+        score = score.split("-")
+        listaDupla.append((score[0], int(score[1])))
+
+    # Ordena por puntuacion, pero cada puntuacion mantiene su nombre
+    listaDupla.sort(key=lambda tup: tup[1], reverse=True)
+    for j in range(len(listaDupla)):
+        print(j)
+        if j < 3:
+            nombre, s = listaDupla[j]
+            typeText(ventana, str(nombre), 20, WIDTH / 2 - 75, 250 + j * 30)
+            typeText(ventana, ":", 20, WIDTH / 2, 250 + j * 30)
+            typeText(ventana, str(s), 20, WIDTH / 2 + 75, 250 + j * 30)
+    menu = True
     pygame.display.flip()
-    gameOver = True
-    while gameOver:
+    while menu:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYUP:
-                gameOver = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                xbj, ybj, abj, albj = btnMenu.rect
+                if xm >= xbj and xm <= xbj + abj:
+                    if ym >= ybj and ym <= ybj + albj:
+                        inicioJuego(nombre)
+                        menu = False
 
-def gameOver(score):
+def gameOverScreen(score, nombre):
     ventana.blit(bg, bgRect)
-    typeText(ventana, "Game Over", 72, WIDTH / 2, HEIGHT / 4)
-    typeText(ventana, "Score: " + str(score), 36, WIDTH / 2, HEIGHT / 2)
-    typeText(ventana, "Presiona cualquier tecla para volver a jugar!", 20, WIDTH / 2, HEIGHT - 100)
-
-    while gameOver:
+    typeText(ventana, "Game Over", 72, WIDTH / 2, HEIGHT / 6)
+    typeText(ventana, "Score: " + str(score), 36, WIDTH / 2, HEIGHT / 3)
+    typeText(ventana, "Presiona cualquier tecla para volver a jugar!", 20, WIDTH / 2, HEIGHT - 250)
+    ventana.blit(btnHighScore.image, btnHighScore.rect)
+    pygame.display.flip()
+    wait = True
+    while wait:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYUP:
-                gameOver = False
-
+                print("jugar")
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                xm, ym = pygame.mouse.get_pos()
+                xbj, ybj, abj, albj = btnHighScore.rect
+                if xm >= xbj and xm <= xbj + abj:
+                    if ym >= ybj and ym <= ybj + albj:
+                        highScore(nombre)
+                        wait = False
 
 def mostrarVidas(ventana, x, y, vidas, img):
     for vida in range(vidas):
@@ -128,7 +186,7 @@ class Player(pygame.sprite.Sprite):
         self.speedX = 0
         self.speed = 15
         self.shield = 100
-        self.vidas = 3
+        self.vidas = 1
         self.display = False
         self.displayTimer = pygame.time.get_ticks()
 
@@ -232,24 +290,31 @@ class Explosion(pygame.sprite.Sprite):
 imgBotonJugar = pygame.image.load(os.path.join(assetsFolder, "start.png"))
 imgBotonHowToPlay = pygame.image.load(os.path.join(assetsFolder, "howToPlay.png"))
 imgBotonHighScore = pygame.image.load(os.path.join(assetsFolder, "highScore.png"))
+imgBotonMenu = pygame.image.load(os.path.join(assetsFolder, "menu.png"))
 
 btnJugar = pygame.sprite.Sprite()  # SPRITE
 btnJugar.image = imgBotonJugar
 btnJugar.rect = imgBotonJugar.get_rect()
-btnJugar.rect.left = WIDTH / 2 - btnJugar.rect.width / 2   # coordenada x
-btnJugar.rect.top = HEIGHT / 2 - btnJugar.rect.height / 2  # coordenada y
+btnJugar.rect.centerx = WIDTH / 2
+btnJugar.rect.top = HEIGHT / 2
 
 btnHighScore = pygame.sprite.Sprite()
 btnHighScore.image = imgBotonHighScore
 btnHighScore.rect = imgBotonHighScore.get_rect()
-btnHighScore.rect.left = WIDTH / 2 - btnHighScore.rect.width / 2   # coordenada x
-btnHighScore.rect.top = HEIGHT / 2 - btnHighScore.rect.height / 2 + 5# coordenada y
+btnHighScore.rect.centerx = WIDTH / 2
+btnHighScore.rect.top = HEIGHT / 2 + btnHighScore.rect.height + 5
 
 btnHowToPlay = pygame.sprite.Sprite()
 btnHowToPlay.image = imgBotonHowToPlay
 btnHowToPlay.rect = imgBotonHowToPlay.get_rect()
-btnHowToPlay.rect.left = WIDTH / 2 - btnHowToPlay.rect.width / 2   # coordenada x
-btnHowToPlay.rect.top = HEIGHT / 2 - btnHowToPlay.rect.height / 2 + 10  # coordenada y
+btnHowToPlay.rect.centerx = WIDTH / 2
+btnHowToPlay.rect.top = HEIGHT / 2 + btnHowToPlay.rect.height * 2 + 10
+
+btnMenu = pygame.sprite.Sprite()  # SPRITE
+btnMenu.image = imgBotonMenu
+btnMenu.rect = imgBotonMenu.get_rect()
+btnMenu.rect.centerx = WIDTH / 2
+btnMenu.rect.top = HEIGHT - 90
 
 # Iniciar Pygame y crear la ventana del juego
 pygame.init()
@@ -259,8 +324,12 @@ pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
 
 # Cargar gráficos del juego
+# Backgrounds
 bg = pygame.image.load(os.path.join(assetsFolder, "corona_rt.png")).convert()
 bgRect = bg.get_rect()
+bgHowTo = pygame.image.load(os.path.join(assetsFolder, "howToPlayBg.png")).convert()
+bgHowToRect = bgHowTo.get_rect()
+# Objectos
 naveImg = pygame.image.load(os.path.join(assetsFolder, "playerShip1_red.png")).convert()
 naveVidaImg = pygame.image.load(os.path.join(assetsFolder, "playerLife1_red.png")).convert()
 naveVidaImg.set_colorkey(BLACK)
@@ -297,6 +366,7 @@ pygame.mixer.music.load(os.path.join(musicFolder, "Notathing2.mp3"))
 pygame.mixer.music.set_volume(0.4)
 # Tocar música de fondo
 pygame.mixer.music.play(loops=-1)
+
 # Agrupar Sprites para agregarlos facilmente al juego
 allSprites = pygame.sprite.Group()
 # Mobs group
@@ -311,14 +381,15 @@ for i in range(8):
 score = 0
 
 
-def dibujar(score):
+def dibujar(score, nombre):
+    listaPuntos = []
     # Loop del Juego
-    menu = True
     running = True
+    gameOver = False
     while running:
-        if menu:
-            inicioJuego()
-            menu = False
+        if gameOver:
+            gameOverScreen(score, nombre)
+            gameOver = True
         # Mantener el loop corriendo a la velocidad requerida
         clock.tick(FPS)
         # Eventos - Procesos
@@ -359,8 +430,9 @@ def dibujar(score):
                 player.shield = 100
 
         # Si se destruye la nave y la explosión termino
-        if player.vidas == 0 and not naveDestruida.alive():
-            gameOver(score)
+        if player.vidas == 0:
+            listaPuntos.append(score)
+            gameOver = True
 
         # Renedr / Draw
         ventana.fill(BLACK)
@@ -372,11 +444,16 @@ def dibujar(score):
         mostrarVidas(ventana, WIDTH - 120, 10, player.vidas, naveVidaImg)
         # After drawing flip the new slide
         pygame.display.flip()
+
+        if len(listaPuntos) > 0:
+            listaPuntos.sort(reverse=True)
+            salida = open(os.path.join(gameFolder, "HighScores.txt"), "a")
+            salida.write(nombre + "-" + str(listaPuntos[0]) + "\n")
+            salida.close()
     pygame.quit()
 
-
 def main():
-    dibujar(score)
-
+    nombre = preguntarNombre()
+    inicioJuego(nombre)
 
 main()

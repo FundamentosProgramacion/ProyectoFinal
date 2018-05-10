@@ -68,7 +68,6 @@ def checarColisiones(listaBalas, listaEnemigos, efecto):
                 # efecto de sonido
                 efecto.play()
                 break
-
     return destruidos
 
 def dibujar():
