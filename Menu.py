@@ -157,8 +157,8 @@ def dibujar():
     imgBtnPuntaje=pygame.image.load("button_puntajeTitulo.png")
 #Sonido
     pygame.mixer.init()
-    cancionFondoJuego = pygame.mixer.Sound("Cancion.mp3")
-    cancionMenu=pygame.mixer.Sound("Menu.wav")
+    cancionFondoJuego = pygame.mixer.music.load("Cancion.mp3")
+    cancionMenu=pygame.music.load("Menu.wav")
 
 
 
@@ -461,10 +461,10 @@ def dibujar():
             ventana.blit(spriteBtnCreditos.image, spriteBtnCreditos.rect)
             ventana.blit(spriteBtnPuntajes.image, spriteBtnPuntajes.rect)
             ventana.blit(spriteBtnTitulo.image, spriteBtnTitulo.rect)
-            cancionMenu.play()
+            
 
         elif estadoJuego == JUEGO:
-            cancionFondoJuego.play()
+            
             ventana.blit(imgFondoJuego, (0,0))
 
             font = pygame.font.SysFont('Consolas', 30)
