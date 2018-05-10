@@ -15,6 +15,10 @@ NEGRO = (0, 0, 122)
 
 
 # Estructura básica de un programa que usa pygame para dibujar
+def formatearNombre(datos):
+    nombre= datos[0]
+    return nombre
+
 def crearEnemi(listaEnemi, imgEnemi1):
     for renglon in range(1, 8):  # 1..5
         for columna in range(7,10):
@@ -135,10 +139,36 @@ def quitarPuntos(puntos):
     return quitar
 
 
+def puntaje(datos):
+    Puntos = datos[1]
+    return Puntos
+
+
+def crearLista(datos):
+    listaPuntajes=[]
+    puntaje= int(datos)
+    listaPuntajes.append(puntaje)
+    listaPuntajes.sort()
+    return listaPuntajes
+
+
+def checarMejores(Puntaje, listaPuntaje):
+    if Puntaje == listaPuntaje[0] or Puntaje == listaPuntaje[1] or Puntaje == listaPuntaje[3]:
+        return True
+    else:
+        return False
+
+
+def crearListaBest(nombre, Puntaje):
+    listaBest=[]
+    listaBest.append(nombre)
+    listaBest.append(Puntaje)
+    return listaBest
 
 
 def dibujar(nombreJugador):
     # Inicializa el motor de pygame
+    pygame.mixer.pre_init(44100,16,2,4096)
     pygame.init()
     ventana = pygame.display.set_mode((ANCHO, ALTO))  # Crea la ventana de dibujo
     reloj = pygame.time.Clock()  # Para limitar los fps
@@ -151,13 +181,14 @@ def dibujar(nombreJugador):
     imgMenu = pygame.image.load("bHow.png")
     imgInfo= pygame.image.load("bInfo.png")
     imgHero= pygame.image.load("bWin.png")
+    imgbMenu = pygame.image.load("bHome.png")
     imgCFondo = pygame.image.load("fondoRojo.jpg")
     imgHFondo= pygame.image.load("podio.jpg")
     imgIFondo = pygame.image.load("fondoRojo.jpg")
 
 
 
- #Boton menu
+ #Boton Jugar
     spriteBtnJugar = pygame.sprite.Sprite()
     spriteBtnJugar.image = imgBtnJugar
     spriteBtnJugar.rect = imgBtnJugar.get_rect()  # rectangulo, (x,y),whith,height
@@ -173,15 +204,21 @@ def dibujar(nombreJugador):
 #Boton Info
     spriteBtnInfo = pygame.sprite.Sprite()
     spriteBtnInfo.image = imgInfo
-    spriteBtnInfo.rect = imgMenu.get_rect()
+    spriteBtnInfo.rect = imgInfo.get_rect()
     spriteBtnInfo.rect.left = 0
     spriteBtnInfo.rect.top = 556
 #Boton mejores jugadores
     spriteBtnHero = pygame.sprite.Sprite()
     spriteBtnHero.image = imgHero
-    spriteBtnHero.rect = imgMenu.get_rect()
+    spriteBtnHero.rect = imgHero.get_rect()
     spriteBtnHero.rect.left = 684
     spriteBtnHero.rect.top = 556
+#Botn a Menu
+    spriteBtnHome = pygame.sprite.Sprite()
+    spriteBtnHome.image = imgbMenu
+    spriteBtnHome.rect = imgMenu.get_rect()
+    spriteBtnHome.rect.left = 766
+    spriteBtnHome.rect.top = 556
 
  #Musica
 
@@ -274,6 +311,7 @@ def dibujar(nombreJugador):
     JugadorGanador= 3
     fuente = pygame.font.SysFont("monospace", 76)
     fuente2 = pygame.font.SysFont("AgencyFB", 50)
+    fuente3 = pygame.font.SysFont("AgencyFB", 25)
 
 
 
@@ -293,19 +331,30 @@ def dibujar(nombreJugador):
                     xbh, ybh, abh, albh= spriteBtnHero.rect
                     xbm, ybm, abm, albm= spriteBtnMenu.rect
                     xbj, ybj, abj, albj = spriteBtnJugar.rect  # xBtnJugar, y , ancho, alto
+
                     if xm >= xbj and xm <= xbj + abj:
                         if ym >= ybj and ym <= ybj + albj:
                             estadoJuego = Nivel2
+
                     if xm >= xbm and xm <= xm + abm:
                         if ym >= ybm and ym <= ybm + albm:
                             estadoJuego = COMOJUGAR
 
-                    elif xm >= xbi and xm <= xbi + abi:
+                    if xm >= xbi and xm <= xbi + abi:
                         if ym >= ybi and ym <= ybi + albi:
                             estadoJuego = INFO
-                    elif xm >= xbh and xm <= xbh + abh:
+
+                    if xm >= xbh and xm <= xbh + abh:
                         if ym >= ybh and ym <= ybh + albh:
                             estadoJuego = HERO
+                if estadoJuego == HERO or estadoJuego == INFO or estadoJuego == COMOJUGAR or estadoJuego == JUEGO or estadoJuego == Nivel2 or estadoJuego == Gana:
+                    xbo, ybo, abo, albo = spriteBtnHome.rect
+                    if xm >= xbo and xm <= xbo + abo:
+                        if ym >= ybo and ym <= ybo + albo:
+                            estadoJuego = MENU
+
+
+
 
             #Juego Nivel 1 teclas
 
@@ -349,12 +398,17 @@ def dibujar(nombreJugador):
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
 
+            pygame.mixer.music.load('SNA.mp3')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
+
             dibujarEnemi(ventana, listaEnemi)
             dibujarBalas(ventana, listaBalas)
             dibujarEnemi2(ventana, listaEnemi2)
 
             ventana.blit(sold.image, sold.rect)
             ventana.blit(sold2.image, sold2.rect)
+            ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
 
             #MOVIMIENTO SOLDADO PC
             accion= random.randint(0,10)
@@ -397,6 +451,7 @@ def dibujar(nombreJugador):
         elif estadoJuego == Nivel2:
 
 
+
             #Lineas de Vida
             nombre = fuente2.render(nombreJugador, 1, BLANCO)
             ventana.blit(nombre, (500, 40))
@@ -411,12 +466,8 @@ def dibujar(nombreJugador):
             ventana.blit(Guita2.image, Guita2.rect)
             dibujarBalas(ventana, listaBalas)
             actualizarBalas(listaBalas)
-            pygame.mixer.init()
-            pygame.mixer.music.load('SNA.mp3')
-            clock = pygame.time.Clock()
-            pygame.mixer.music.play()
-            while pygame.mixer.music.get_busy():
-                clock.tick(1000)
+            ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
+
 
             accion2= random.randint(0,50)
             if accion2== 10 or accion2== 20 or accion2 == 30:
@@ -451,11 +502,17 @@ def dibujar(nombreJugador):
 
 
         elif estadoJuego == Gana:
-            music.stop()
+            ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
+            pygame.mixer.music.stop()
             if JugadorGanador== 1:
                  # texto gana
                 texto = fuente.render(("Gano Jugador"), 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+                salida = open("PUNTAJE.txt", "w", encoding='UTF-8')
+                lineaSalida = "%s,%s" % (nombreJugador, puntosVida)
+                salida.write(lineaSalida)
+                salida.write("\n")
+                salida.close()
             elif JugadorGanador== 0:
                  # texto gana
                 texto = fuente.render("Gano PC", 1, BLANCO)
@@ -463,22 +520,59 @@ def dibujar(nombreJugador):
 
         elif estadoJuego == COMOJUGAR:
 
+
             # texto COMO JUGAR
             ventana.blit(imgCFondo, (0, 0))
-            texto = fuente.render("¡Como jugar!", 1, BLANCO)
-            ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
-        elif estadoJuego == INFO:
+            ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
+            texto = fuente2.render("Como jugar: dispara con flecha izquierda", 1, BLANCO)
+            texto1 = fuente2.render("muevete con flechas arriba y abajo", 1,
+                                    BLANCO)
+            texto2 = fuente2.render("¡DIVIERTETE!", 1,
+                                    BLANCO)
+            ventana.blit(texto, (0, ALTO // 2-100))
+            ventana.blit(texto1, (0, ALTO // 2))
+            ventana.blit(texto2, (0, ALTO // 2+100))
 
-            # texto INFO
-            ventana.blit(imgIFondo, (0, 0))
-            texto = fuente.render("Mirna Zertuche\n A01373852", 1, BLANCO)
-            ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
         elif estadoJuego == HERO:
 
-            # texto HERO
-            ventana.blit(imgHFondo, (0, 0))
-            texto = fuente.render("¡HERO!", 1, BLANCO)
-            ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+            entrada = open("PUNTAJE.txt", "r", encoding='UTF-8')
+            linea = entrada.readline()
+            while linea != "":
+                datos = linea.split(",")
+                nombre = formatearNombre(datos)
+                Puntaje = puntaje(datos)
+                listaPuntaje = crearLista(Puntaje)
+                Mejor = checarMejores(Puntaje,listaPuntaje)
+                if Mejor == True:
+                    listaNombrePuntos= crearListaBest(nombre,Puntaje)
+                    texto = fuente2.render((listaNombrePuntos[0],listaNombrePuntos[1]), 1, BLANCO)
+                    texto1 = fuente2.render((listaNombrePuntos[2],listaNombrePuntos[3]), 1, BLANCO)
+                    texto2 = fuente2.render((listaNombrePuntos[4],listaNombrePuntos[5]), 1, BLANCO)
+                    ventana.blit(texto, (ANCHO//2, ALTO // 2 - 100))
+                    ventana.blit(texto1, (ANCHO//2, ALTO // 2))
+                    ventana.blit(texto2, (ANCHO//2, ALTO // 2 + 100))
+                if Mejor == False:
+                    texto2 = fuente2.render("No eres parte de los mejores", 1, BLANCO)
+                    ventana.blit(texto2, (ANCHO // 2, ALTO // 2 + 100))
+
+
+
+            salida.close()
+
+            # texto INFO
+
+
+        elif estadoJuego == INFO:
+            ventana.blit(imgIFondo, (0, 0))
+            ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
+            texto = fuente2.render("Mirna Zertuche", 1, BLANCO)
+            texto1 = fuente2.render(" A01373852", 1, BLANCO)
+            texto2 = fuente2.render("Fundamentos de la programación", 1, BLANCO)
+            ventana.blit(texto, (0, ALTO // 2 - 100))
+            ventana.blit(texto1, (0, ALTO // 2))
+            ventana.blit(texto2, (0, ALTO // 2 + 100))
+
+
 
 
         pygame.display.flip()  # Actualiza trazos
