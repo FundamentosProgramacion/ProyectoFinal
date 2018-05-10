@@ -280,7 +280,7 @@ def dibujar():
             resistencia = consolas.render('Resistencia: %d' % vidas, 100, NEGRO)
             ventana.blit(puntaje, (50, 20))
             ventana.blit(resistencia, (500, 20))
-            if puntos >= 300:
+            if puntos >= 5000:
                 estado = 'gana'
         elif estado == 'gana':
             dibujarVictoria(imgEE, consolas, ventana)
