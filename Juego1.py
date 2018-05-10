@@ -166,8 +166,8 @@ def dibujar(nombreJugador):
     spriteBtnHero.rect.top = 556
 
  #Musica
-    #pygame.mixer.init()
-    #music = pygame.mixer.Sound("musicaFondo.wav")
+    pygame.mixer.init()
+    music = pygame.mixer.Sound("musicaFondo.wav")
 
 
     # Estados del juego
@@ -330,6 +330,7 @@ def dibujar(nombreJugador):
 
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
+            music.play()
             nombre = fuente2.render(nombreJugador, 1, BLANCO)
             ventana.blit(nombre, (500, 40))
             PC = fuente2.render("PC", 1, BLANCO)
@@ -413,7 +414,7 @@ def dibujar(nombreJugador):
 
 
         elif estadoJuego == Gana:
-            #music.stop()
+            music.stop()
             if JugadorGanador== 0:
                  # texto gana
                 texto = fuente.render(("Gano Jugador"), 1, BLANCO)
@@ -443,7 +444,7 @@ def dibujar(nombreJugador):
             ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
         elif estadoJuego == HERO:
             ventana.blit(imgHFondo, (0, 0))
-            entrada = open("hero.txt", "w", encoding='UTF-8')
+            entrada = open("hero.txt", "r", encoding='UTF-8')
 
             # leer lineaxlinea
             linea = entrada.readline()
