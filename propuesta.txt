@@ -1,3 +1,3 @@
 Propuesta de videojuego:
-Un escenario de plataformas con megaman de persona y enemigos aparte de una pelea contra un jefe en un segundo escenario,
-ser· a una vida y el puntaje ser· por tiempo y vida que se tenga a final del nivel, contar· con las 3 mejores puntuaciones.
+Un escenario de plataforma con 6 enemigos donde se deben de matar obligatoriamente por columna de abajo hacia arriba porque si no se
+matan en ese orden, los saca del juego por lo que disparar a lo loco no sirve, una vez asesinados a los seis oprimir el bot√≥n salir y luego cerrar el programa, la ultima puntuaci√≥n resgistrada es la suya
