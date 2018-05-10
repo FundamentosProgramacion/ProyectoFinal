@@ -120,7 +120,6 @@ def actualizarArchivo(vidas, puntuacion):
             else:
                dicc[int(datos[0])] = int(datos[1])
                linea = scores.readline()
-               print(dicc)
         for crv in sorted(dicc,reverse=True):
             lineaSalida = "%i,%i" % (crv,dicc[crv])
             scores.write(lineaSalida)
