@@ -72,12 +72,12 @@ def movimientoPacman(pacman, direccion):
 
     elif direccion == 3:  # Abajo
         pacman.image = pygame.transform.rotate(pacman.image, -90)
-        if (126 <= pacman.rect.top < 564 and (759 <= pacman.rect.left <= 765 or 6 <= pacman.rect.left <= 12)) or (164 <= pacman.rect.top < 530 and (45 <= pacman.rect.left <= 53 or 717 <= pacman.rect.left <= 725)) or (204 <= pacman.rect.top < 488 and (87 <= pacman.rect.left <= 95 or 675 <= pacman.rect.left <= 683)) or (244 <= pacman.rect.top < 448 and (129 <= pacman.rect.left <= 137 or 633 <= pacman.rect.left <= 641)) or (284 <= pacman.rect.top < 408 and (171 <= pacman.rect.left <= 179 or 591 <= pacman.rect.left <= 599)) or (379 <= pacman.rect.left <= 389 and (525 <= pacman.rect.top < 564 or 126 <= pacman.rect.top < 168 or 205 <= pacman.rect.top < 247 or 284 <= pacman.rect.top < 326)):
+        if (126 <= pacman.rect.top < 564 and (759 <= pacman.rect.left <= 765 or 6 <= pacman.rect.left <= 12)) or (164 <= pacman.rect.top < 530 and (45 <= pacman.rect.left <= 53 or 717 <= pacman.rect.left <= 725)) or (204 <= pacman.rect.top < 488 and (87 <= pacman.rect.left <= 95 or 675 <= pacman.rect.left <= 683)) or (244 <= pacman.rect.top < 448 and (129 <= pacman.rect.left <= 137 or 633 <= pacman.rect.left <= 641)) or (284 <= pacman.rect.top < 408 and (171 <= pacman.rect.left <= 179 or 591 <= pacman.rect.left <= 599)) or (379 <= pacman.rect.left <= 389 and (525 <= pacman.rect.top < 564 or 126 <= pacman.rect.top < 168 or 205 <= pacman.rect.top < 247 or 284 <= pacman.rect.top < 326 or 444 <= pacman.rect.top < 488)):
             pacman.rect.top += movimiento
 
     elif direccion == 1:  # Arriba
         pacman.image = pygame.transform.rotate(pacman.image, 90)
-        if (128 < pacman.rect.top <= 565 and (759 <= pacman.rect.left <= 765 or 6 <= pacman.rect.left <= 12)) or (165 < pacman.rect.top <= 531 and (45 <= pacman.rect.left <= 53 or 717 <= pacman.rect.left <= 725)) or (205 < pacman.rect.top <= 489 and (87 <= pacman.rect.left <= 95 or 675 <= pacman.rect.left <= 683)) or (245 < pacman.rect.top <= 449 and (129 <= pacman.rect.left <= 137 or 633 <= pacman.rect.left <= 641)) or (285 < pacman.rect.top <= 409 and (171 <= pacman.rect.left <= 179 or 591 <= pacman.rect.left <= 599)) or (379 <= pacman.rect.left <= 389 and (526 < pacman.rect.top <= 565 or 127 < pacman.rect.top <= 169 or 206 < pacman.rect.top <= 248 or 285 < pacman.rect.top <= 327)):
+        if (128 < pacman.rect.top <= 565 and (759 <= pacman.rect.left <= 765 or 6 <= pacman.rect.left <= 12)) or (165 < pacman.rect.top <= 531 and (45 <= pacman.rect.left <= 53 or 717 <= pacman.rect.left <= 725)) or (205 < pacman.rect.top <= 489 and (87 <= pacman.rect.left <= 95 or 675 <= pacman.rect.left <= 683)) or (245 < pacman.rect.top <= 449 and (129 <= pacman.rect.left <= 137 or 633 <= pacman.rect.left <= 641)) or (285 < pacman.rect.top <= 409 and (171 <= pacman.rect.left <= 179 or 591 <= pacman.rect.left <= 599)) or (379 <= pacman.rect.left <= 389 and (526 < pacman.rect.top <= 565 or 127 < pacman.rect.top <= 169 or 206 < pacman.rect.top <= 248 or 285 < pacman.rect.top <= 327 or 445 < pacman.rect.top <= 489)):
             pacman.rect.top -= movimiento
 
     elif direccion == 0:
@@ -151,7 +151,7 @@ def mapa(ventana):
 
 def puntaje(Font, score, fanA):
     scoreTitulo = Font.render("SCORE", False, BLANCO)
-    # scoreTitulo = Font.render("%03d, %03d, %03d, %03d" % (fanA.rect.left, fanA.rect.top, fanA.rect.left + fanA.rect.width, fanA.rect.top + fanA.rect.height), False, BLANCO)
+    # scoreTitulo = Font.render("%03d, %03d" % (fanA.rect.left, fanA.rect.top), False, BLANCO)
     scoreNum = Font.render("%04d" % score, False, BLANCO)
 
     return scoreTitulo, scoreNum
@@ -2184,7 +2184,7 @@ def dibujar():
     score = 0
 
     # Modos de Juego
-    ModoDeJuego = 2
+    ModoDeJuego = 1
 
     Menu = 1
     Juego = 2
@@ -2246,7 +2246,7 @@ def dibujar():
             listaFan.append(fantasmaD)
             contadorAni, pacman.image = animarPacman(contadorAni)
             pacman, direccion = movimientoPacman(pacman, direccion)
-            if ticksFan <= 541:
+            if ticksFan <= 650:
                 fantasmaA, fantasmaB, fantasmaC, fantasmaD, ticksFan = movimientoFantasmas(fantasmaA, fantasmaB, fantasmaC, fantasmaD, ticksFan)
             fantasmaA, fanARanMov = movFanA(fantasmaA, fanARanMov)
             fantasmaB, fanBRanMov = movFanB(fantasmaB, fanBRanMov)
@@ -2254,12 +2254,13 @@ def dibujar():
             fantasmaD, fanDRanMov = movFanD(fantasmaD, fanDRanMov)
 
             ventana.blit(Font.render("Pacman", False, BLANCO), (5, 10))
+            # ventana.blit(Font.render("%03d, %03d" % (pacman.rect.left, pacman.rect.top), False, BLANCO), (5, 10))
             mapa(ventana)
             dibujarDots(ventana, listaDots)
-            ventana.blit(fantasmaA.image, fantasmaA.rect)
             ventana.blit(fantasmaB.image, fantasmaB.rect)
             ventana.blit(fantasmaC.image, fantasmaC.rect)
             ventana.blit(fantasmaD.image, fantasmaD.rect)
+            ventana.blit(fantasmaA.image, fantasmaA.rect)
             ventana.blit(pacman.image, pacman.rect)
 
             ModoDeJuego = checaChoque(listaFan, pacman)
