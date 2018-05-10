@@ -8,7 +8,7 @@ ALTO = 600
 BLANCO = (255, 255, 255)  # R,G,B en el rango [0,255]
 VERDE = (0, 122, 0)
 ROJO = (255, 0, 0)
-NEGRO = (0, 0, 122)
+NEGRO = (0, 0, 0)
 
 
 
@@ -149,24 +149,51 @@ def puntaje(datos):
 
 def crearLista(datos):
     listaPuntajes=[]
-    puntaje= int(datos)
+    puntaje= int(datos[1])
     listaPuntajes.append(puntaje)
     listaPuntajes.sort()
+    print(listaPuntajes)
     return listaPuntajes
 
 
-def checarMejores(Puntaje, listaPuntaje):
-    if Puntaje == listaPuntaje[0] or Puntaje == listaPuntaje[1] or Puntaje == listaPuntaje[3]:
-        return True
-    else:
-        return False
+def checarMejores(Puntaje, listaPuntaje, nombre):
+    listaMejores=[]
+    for x in range(0,4):
+        if int(Puntaje) <= 100 and int(Puntaje) >= listaPuntaje[x]:
+            listaMejores.append(nombre)
+            listaMejores.append(Puntaje)
+    return listaMejores
 
 
-def crearListaBest(nombre, Puntaje):
+
+
+
+
+def crearListaBest(nombre, Puntaje, mejoresPuntaje):
     listaBest=[]
     listaBest.append(nombre)
     listaBest.append(Puntaje)
     return listaBest
+
+
+def procesarMejores(entrada):
+    salida= open("Mejores.txt", "w", encoding='UTF-8')
+
+    linea = entrada.readline()
+    while linea != "":
+        datos = linea.split(",")
+        mejoresPuntaje = crearLista(datos)
+        nombre = formatearNombre(datos)
+        puntos = puntaje(datos)
+        mejores= checarMejores(puntos,mejoresPuntaje, nombre)
+        lineaSalida = "%s,%s" % (mejores[0],mejores[1])
+        salida.write(lineaSalida)
+        salida.write("\n")
+        linea = entrada.readline()
+    salida.close()
+    return mejores
+
+
 
 
 def dibujar(nombreJugador):
@@ -392,7 +419,7 @@ def dibujar(nombreJugador):
                     listaBalas.append(bala)
 
         # Borrar pantalla
-        ventana.fill(NEGRO)
+        ventana.fill(BLANCO)
 
         # Dibujar, aquí haces todos los trazos que requieras
         # Normalmente llamas a otra función y le pasas -ventana- como parámetro, por ejemplo, dibujarLineas(ventana)
@@ -410,6 +437,11 @@ def dibujar(nombreJugador):
 
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
+            nombre = fuente2.render(nombreJugador, 1, NEGRO)
+            ventana.blit(nombre, (500, 30))
+            PC = fuente2.render("PC", 1, NEGRO)
+            ventana.blit(PC, (100, 40))
+
 
             dibujarEnemi(ventana, listaEnemi)
             dibujarBalas(ventana, listaBalas)
@@ -462,9 +494,9 @@ def dibujar(nombreJugador):
 
 
             #Lineas de Vida
-            nombre = fuente2.render(nombreJugador, 1, BLANCO)
+            nombre = fuente2.render(nombreJugador, 1, NEGRO)
             ventana.blit(nombre, (500, 40))
-            PC = fuente2.render("PC", 1, BLANCO)
+            PC = fuente2.render("PC", 1, NEGRO)
             ventana.blit(PC, (100, 40))
             pygame.draw.line(ventana, ROJO, (100, 100), ((200), 100), 20)
             pygame.draw.line(ventana, ROJO, (490, 100), ((590), 100), 20)
@@ -504,6 +536,8 @@ def dibujar(nombreJugador):
             elif puntosVidaPC== 0:
                 JugadorGanador = 1
                 estadoJuego = Gana
+            elif puntosVida==0 and puntosVidaPC==0:
+                estadoJuego= Gana
 
 
 
@@ -515,13 +549,18 @@ def dibujar(nombreJugador):
             pygame.mixer.music.stop()
             if JugadorGanador== 1:
                  # texto gana
-                texto = fuente.render(("Gano Jugador"), 1, BLANCO)
+                texto = fuente.render(("Gano Jugador"), 1, NEGRO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
 
             elif JugadorGanador== 0:
                  # texto gana
-                texto = fuente.render("Gano PC", 1, BLANCO)
+                texto = fuente.render("Gano PC", 1, NEGRO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+            elif JugadorGanador== 3:
+                 # texto gana
+                texto = fuente.render("Empate", 1, NEGRO)
+                ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+
 
         elif estadoJuego == COMOJUGAR:
 
@@ -539,27 +578,16 @@ def dibujar(nombreJugador):
             ventana.blit(texto2, (0, ALTO // 2+100))
 
         elif estadoJuego == HERO:
+            entrada= open("PUNTAJE.txt", "r", encoding='UTF-8')
+            listaNombrePuntos = procesarMejores(entrada)
+            texto = fuente2.render((listaNombrePuntos[0],listaNombrePuntos[1]), 1, BLANCO)
+            texto1 = fuente2.render((listaNombrePuntos[2],listaNombrePuntos[3]), 1, BLANCO)
+            texto2 = fuente2.render((listaNombrePuntos[4],listaNombrePuntos[5]), 1, BLANCO)
+            ventana.blit(texto, (ANCHO//2, ALTO // 2 - 100))
+            ventana.blit(texto1, (ANCHO//2, ALTO // 2))
+            ventana.blit(texto2, (ANCHO//2, ALTO // 2 + 100))
 
-            entrada = open("PUNTAJE.txt", "r", encoding='UTF-8')
-            linea = entrada.readline()
-            while linea != "":
-                datos = linea.split(",")
-                nombre = formatearNombre(datos)
-                Puntaje = puntaje(datos)
-                listaPuntaje = crearLista(Puntaje)
-                Mejor = checarMejores(Puntaje,listaPuntaje)
-                if Mejor == True:
-                    listaNombrePuntos= crearListaBest(nombre,Puntaje)
-                    texto = fuente2.render((listaNombrePuntos[0],listaNombrePuntos[1]), 1, BLANCO)
-                    texto1 = fuente2.render((listaNombrePuntos[2],listaNombrePuntos[3]), 1, BLANCO)
-                    texto2 = fuente2.render((listaNombrePuntos[4],listaNombrePuntos[5]), 1, BLANCO)
-                    ventana.blit(texto, (ANCHO//2, ALTO // 2 - 100))
-                    ventana.blit(texto1, (ANCHO//2, ALTO // 2))
-                    ventana.blit(texto2, (ANCHO//2, ALTO // 2 + 100))
-                if Mejor == False:
-                    texto2 = fuente2.render("No eres parte de los mejores", 1, BLANCO)
-                    ventana.blit(texto2, (ANCHO // 2, ALTO // 2 + 100))
-            salida.close()
+            entrada.close()
 
             # texto INFO
 
