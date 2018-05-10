@@ -186,7 +186,7 @@ class Player(pygame.sprite.Sprite):
         self.speedX = 0
         self.speed = 15
         self.shield = 100
-        self.vidas = 1
+        self.vidas = 3
         self.display = False
         self.displayTimer = pygame.time.get_ticks()
 
