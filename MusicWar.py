@@ -90,11 +90,14 @@ def checarcolisiones(listaBalas, listaEnemi):
             enemigo = listaEnemi[ie]
             xb, yb, ab, alb = bala.rect
             xe, ye, ae, ale = enemigo.rect
-            if (xb >= xe and xb <= xe + ae and yb >= ye and yb  <= ye + ale) or (xb >= xe and xb <= xe + ae and (yb+alb) >= ye and (yb+alb)  <= ye + ale):
+            if ((xb >= xe and xb <= xe + ae and yb >= ye and yb  <= ye + ale) or (xb >= xe and xb <= xe + ae and (yb+alb) >= ye and (yb+alb)  <= ye + ale)):
                 listaBalas.remove(bala)
                 listaEnemi.remove(enemigo)
                 # listaEnemi[ie].image = imgEnemi #papa enseño a poner otra imagen
                 destruidos += 1
+            elif xb in range(390, 410):
+                listaBalas.remove(bala)
+
                 # efecto de sonido
                 break
     return destruidos
@@ -334,7 +337,7 @@ def dibujar(nombreJugador):
 
                     if xm >= xbj and xm <= xbj + abj:
                         if ym >= ybj and ym <= ybj + albj:
-                            estadoJuego = Nivel2
+                            estadoJuego = JUEGO
 
                     if xm >= xbm and xm <= xm + abm:
                         if ym >= ybm and ym <= ybm + albm:
@@ -389,6 +392,9 @@ def dibujar(nombreJugador):
 
         # Menu
         if estadoJuego == MENU:
+            pygame.mixer.music.load('SNA.mp3')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
             ventana.blit(imgFondo, (0, 0))
             ventana.blit(spriteBtnJugar.image, spriteBtnJugar.rect)
             ventana.blit(spriteBtnMenu.image, spriteBtnMenu.rect)
@@ -397,10 +403,6 @@ def dibujar(nombreJugador):
 
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
-
-            pygame.mixer.music.load('SNA.mp3')
-            pygame.mixer.music.set_volume(0.5)
-            pygame.mixer.music.play(-1)
 
             dibujarEnemi(ventana, listaEnemi)
             dibujarBalas(ventana, listaBalas)
@@ -469,7 +471,7 @@ def dibujar(nombreJugador):
             ventana.blit(spriteBtnHome.image, spriteBtnHome.rect)
 
 
-            accion2= random.randint(0,50)
+            accion2= random.randint(0,30)
             if accion2== 10 or accion2== 20 or accion2 == 30:
                 bala2 = pygame.sprite.Sprite()
                 bala2.image = imgBala2
