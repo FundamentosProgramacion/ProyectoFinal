@@ -13,25 +13,6 @@ NEGRO = (0, 0, 0)
 ROJO = (216, 15, 36)
 AMARILLO = (255, 255, 0)
 
-#leer archivo y guardar los datos en una lista
-archivo = open("puntos.txt", "r", encoding="UTF-8")
-
-puntaje=[]
-linea= archivo.readlines()
-for i in linea:
-    cadena = i
-    lista=cadena.split(" ")
-    score= int(lista[1])
-    puntaje.append([int(lista[1]), str(lista[0])])
-npuntaje = sorted(puntaje, reverse=True)
-archivo.close()
-
-def guardarJugador(totalpuntos):
-    nombre=(input("inserte su nombre: "))
-    salida= open("puntos.txt","a", encoding="UTF-8")
-    salida.writelines(nombre + (" ") + str(totalpuntos)+ ("\n"))
-    salida.close()
-
 #Función que dibuja la pantalla
 def dibujarAcerca(ventana):
     fuente = pygame.font.SysFont("Consolas", 35)                                     # crea la fuente
@@ -64,17 +45,15 @@ def dibujarAcerca(ventana):
     ventana.blit(textoim, (15, 550))
 
 #Dibuja la pantalla de ganaste
-def dibujarGanaste(ventana, totalpuntos):
+def dibujarGanaste(ventana):
     fuente = pygame.font.SysFont("Consolas", 65)
     fuente2 = pygame.font.SysFont("Consolas", 35)
     texto = fuente.render("¡GANASTE!", 1, ROJO)
     texto1 = fuente2.render("Haz derrotado a Plakton", 1, BLANCO)
     texto2 = fuente2.render("...Eres el mejor...", 1, BLANCO)
-    texto3 = fuente2.render("tus puntos son: " + str(totalpuntos), 1, ROJO)
     ventana.blit(texto, (400, 55))
     ventana.blit(texto1, (350, 145))
     ventana.blit(texto2,(430, 175))
-    ventana.blit(texto3,(430, 195))
 
 #Dibuja la pantalla de perdiste
 def dibujarPerdiste(ventana):
@@ -211,17 +190,6 @@ def mostrarPuntos(ventana, puntos): #muestra los puntos obtenidos
     ventana.blit(texto,(10,30))     #dibuja el texto
     ventana.blit(points,(180,32))   #dibuja los puntos
 
-def puntuacion(ventana):
-    #dibujea la ventana de scores
-    fuente = pygame.font.Font("monospace", 50)
-    texto2 = fuente.render("Scores", 1, NEGRO)
-    ventana.blit(texto2, (260, 12))
-    for i in range(0,len(npuntaje)):
-        texto2 = fuente.render(npuntaje[i][1], 1, NEGRO)
-        ventana.blit(texto2, (10, i*50 + 70))
-        texto2 = fuente.render(str(npuntaje[i][0]), 1, NEGRO)
-        ventana.blit(texto2, (ANCHO - (30*len(str(npuntaje[i][0]))) - 55, i * 50 + 70))
-
 def dibujar():
     # Inicializa el motor de pygame
     pygame.init()
@@ -323,7 +291,6 @@ def dibujar():
         # Procesa los eventos que recibe el programa
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:  # El usuario hizo click en el botón de salir
-                guardarJugador(score)
                 termina = True
             elif evento.type == pygame.MOUSEBUTTONDOWN:  # El usuario hizo click izquierdo al precionarlo
                 xm, ym = pygame.mouse.get_pos()
@@ -423,7 +390,6 @@ def dibujar():
 
         elif estadoJuego == SCORE:       # Condición de score
             ventana.blit(imgScore, (0, 0))
-            puntuacion(ventana)
             ventana.blit(spriteBtnMenu.image, spriteBtnMenu.rect)
 
         elif estadoJuego == JUEGO:      # Condición de juego
@@ -484,14 +450,14 @@ def dibujar():
             elif totalGolpes >= 5:
                  estadoJuego = PIERDE
 
-        totalpuntos = puntos + puntos2
-        mostrarPuntos(ventana, totalpuntos)
-        if totalpuntos >= 20:
-            estadoJuego = GANA
+            totalpuntos = puntos + puntos2
+            mostrarPuntos(ventana, totalpuntos)
+            if totalpuntos >= 20:
+                estadoJuego = GANA
 
         elif estadoJuego == GANA:        # Condición de gana
             ventana.blit(imgGanar, (0, 0))
-            dibujarGanaste(ventana,totalpuntos)
+            dibujarGanaste(ventana)
 
         elif estadoJuego == PIERDE:      # Condición de pierde
             ventana.blit(imgPerder, (0, 0))
