@@ -157,7 +157,7 @@ def dibujar():
     imgBtnPuntaje=pygame.image.load("button_puntajeTitulo.png")
 #Sonido
     pygame.mixer.init()
-    cancionFondoJuego = pygame.mixer.Sound("Cancion.wav")
+    cancionFondoJuego = pygame.mixer.Sound("Cancion.mp3")
     cancionMenu=pygame.mixer.Sound("Menu.wav")
 
 
