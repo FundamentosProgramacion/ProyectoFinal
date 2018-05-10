@@ -330,6 +330,10 @@ def dibujar(nombreJugador):
 
         #Juego Nivel 1
         elif estadoJuego == JUEGO:
+            nombre = fuente2.render(nombreJugador, 1, BLANCO)
+            ventana.blit(nombre, (500, 40))
+            PC = fuente2.render("PC", 1, BLANCO)
+            ventana.blit(PC, (100, 40))
             dibujarEnemi(ventana, listaEnemi)
             dibujarBalas(ventana, listaBalas)
             dibujarEnemi2(ventana, listaEnemi2)
@@ -414,6 +418,12 @@ def dibujar(nombreJugador):
                  # texto gana
                 texto = fuente.render(("Gano Jugador"), 1, BLANCO)
                 ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+                salida = open("hero.txt", "w", encoding='UTF-8')
+                lineaSalida = "%s,%s" % (nombreJugador, puntosVida)
+                salida.write(lineaSalida)
+                salida.write("\n")
+                salida.close()
+
             elif JugadorGanador== 1:
                  # texto gana
                 texto = fuente.render("Gano PC", 1, BLANCO)
@@ -423,8 +433,8 @@ def dibujar(nombreJugador):
 
             # texto COMO JUGAR
             ventana.blit(imgCFondo, (0, 0))
-            texto = fuente.render("¡Como jugar!", 1, BLANCO)
-            ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+            texto = fuente.render("¡Como jugar, dispara con flecha izq\n muevete con flechas arriba y abajo!", 1, BLANCO)
+            ventana.blit(texto, (ANCHO // 2 - 400, ALTO // 2))
         elif estadoJuego == INFO:
 
             # texto INFO
@@ -432,11 +442,14 @@ def dibujar(nombreJugador):
             texto = fuente.render("Mirna Zertuche\n A01373852", 1, BLANCO)
             ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
         elif estadoJuego == HERO:
-
-            # texto HERO
             ventana.blit(imgHFondo, (0, 0))
-            texto = fuente.render("¡HERO!", 1, BLANCO)
-            ventana.blit(texto, (ANCHO // 2 - 200, ALTO // 2))
+            entrada = open("hero.txt", "w", encoding='UTF-8')
+
+            # leer lineaxlinea
+            linea = entrada.readline()
+            while linea != "":
+                print(linea)
+            entrada.close()
 
 
         pygame.display.flip()  # Actualiza trazos
