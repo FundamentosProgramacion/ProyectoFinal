@@ -1,0 +1,3 @@
+Propuesta de videojuego:
+Un escenario de plataforma con 6 enemigos donde se deben de matar obligatoriamente por columna de abajo hacia arriba porque si no se
+matan en ese orden, los saca del juego por lo que disparar a lo loco no sirve, una vez asesinados a los seis oprimir el botón salir y luego cerrar el programa, la ultima puntuación resgistrada es la suya
